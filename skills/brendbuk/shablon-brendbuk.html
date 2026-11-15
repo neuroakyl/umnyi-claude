@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Брендбук</title>
+<!--
+  Шаблон пакета «Умный Claude». Claude правит ТОЛЬКО блок DANNYE ниже (JSON), вёрстку не трогает.
+  VARIANTY не пустой → страница показывает варианты на выбор (1, 2, 3). Пустой → готовый брендбук из BREND.
+  Фото: путь относительно этой папки (мозг/бренд/), например "foto-1.jpg". Нет фото — "".
+-->
+<script id="DANNYE">
+const BREND = {
+  "imya": "Имя Фамилия",
+  "nik": "@nik",
+  "nisha": "домашний кондитер, торты на заказ в Бишкеке",
+  "yazyk": "кыргызский — Instagram и TikTok; русский — Telegram",
+  "cveta": [
+    {"imya": "Фон", "hex": "#F6F1E7", "gde": "фон обложек и карточек"},
+    {"imya": "Текст", "hex": "#1E2A38", "gde": "заголовки и текст"},
+    {"imya": "Акцент", "hex": "#C8553D", "gde": "одно главное слово, кнопки"},
+    {"imya": "Второй акцент", "hex": "#2F6F62", "gde": "плашки, подсветка слова в субтитрах"}
+  ],
+  "shrifty": {"zagolovok": "Montserrat", "zagolovok_ves": 800, "tekst": "Golos Text"},
+  "primer_ky": "Үйдө бышырылган торт — дүкөндөгүдөн жакшы",
+  "primer_ru": "Домашний торт лучше магазинного",
+  "golos": {"slova": ["тёплый", "честный", "с юмором"], "tak": "«Скажу честно: крем на маргарине я не делаю. И вот почему.»", "ne_tak": "«Уважаемые клиенты, представляем вашему вниманию широкий ассортимент.»"},
+  "da": ["кухня как есть", "цены открыто", "крупно торт и руки"],
+  "net": ["канцелярит", "чужие фото тортов", "«самый лучший в городе»"],
+  "oblozhki": [
+    {"zagolovok": "Почему торт оседает", "foto": ""},
+    {"zagolovok": "Сколько стоит торт на самом деле", "foto": ""},
+    {"zagolovok": "Заказ недели: 3 яруса", "foto": ""}
+  ],
+  "subtitry": "Golos Text, 2 строки по центру, белые с тенью, текущее слово — плашкой второго акцента",
+  "montazh": "спокойный темп, план 2–3 секунды, мягкие переходы, тихая музыка без слов",
+  "referensy": ["@primer1 — чистые обложки, одно слово крупно", "@primer2 — тёплый свет на кухне"]
+};
+const VARIANTY = [];
+</script>
+<style>
+  :root { --fon:#F6F1E7; --tekst:#1E2A38; --akcent:#C8553D; --akcent2:#2F6F62; --zag:"Montserrat"; --osn:"Golos Text"; --zves:800; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#ECECEC; color:#1b1b1b; font:16px/1.5 var(--osn), system-ui, "Segoe UI", sans-serif; }
+  main { max-width:1080px; margin:0 auto; padding:24px 16px 64px; }
+  h1, h2, .zag { font-family:var(--zag), system-ui, sans-serif; font-weight:var(--zves); }
+  h1 { font-size:clamp(30px,6vw,56px); line-height:1.05; margin:0; }
+  h2 { font-size:20px; margin:40px 0 12px; text-transform:uppercase; letter-spacing:.06em; }
+  .shapka { background:var(--fon); color:var(--tekst); border-radius:20px; padding:28px; }
+  .shapka h1 span { color:var(--akcent); }
+  .muted { opacity:.7; }
+  .setka { display:grid; gap:12px; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); }
+  .cvet { border-radius:16px; overflow:hidden; background:#fff; }
+  .cvet div { height:96px; }
+  .cvet p { margin:0; padding:10px 12px; font-size:14px; }
+  .karta { background:#fff; border-radius:16px; padding:18px; }
+  .obr { font-family:var(--zag), sans-serif; font-weight:var(--zves); font-size:clamp(26px,4.5vw,44px); line-height:1.1; }
+  .oblozhki { display:grid; gap:12px; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); }
+  .obl { aspect-ratio:9/16; border-radius:16px; position:relative; overflow:hidden; background:var(--fon) center/cover no-repeat; display:flex; align-items:flex-end; }
+  .obl::after { content:""; position:absolute; inset:0; background:linear-gradient(transparent 45%, rgba(0,0,0,.45)); }
+  .obl.bezfoto::after { display:none; }
+  .obl b { position:relative; z-index:1; margin:16px; font-family:var(--zag), sans-serif; font-weight:var(--zves); font-size:24px; line-height:1.1; color:var(--tekst); }
+  .obl:not(.bezfoto) b { color:#fff; }
+  .obl b i { font-style:normal; background:var(--akcent); color:var(--na1); padding:0 6px; border-radius:6px; }
+  .obl .nik { position:absolute; top:12px; left:12px; z-index:1; font-size:12px; color:var(--tekst); opacity:.8; }
+  .sub { background:#2b2b2b url() center/cover; border-radius:16px; padding:48px 16px; text-align:center; }
+  .sub span { font-family:var(--osn), sans-serif; font-weight:700; font-size:26px; color:#fff; text-shadow:0 2px 6px rgba(0,0,0,.6); }
+  .sub mark { background:var(--akcent2); color:var(--na2); border-radius:6px; padding:0 6px; }
+  ul { margin:0; padding-left:20px; }
+  .dn { display:grid; gap:12px; grid-template-columns:1fr 1fr; }
+  @media (max-width:560px) { .dn { grid-template-columns:1fr; } }
+  .br, .variant { font-family:var(--osn), system-ui, "Segoe UI", sans-serif; }
+  .variant { background:#fff; border-radius:20px; padding:16px; margin-bottom:20px; }
+  .variant .nomer { font:800 28px/1 system-ui, sans-serif; }
+  .vr { display:grid; gap:12px; grid-template-columns:200px 1fr; align-items:start; }
+  @media (max-width:560px) { .vr { grid-template-columns:1fr; } }
+  .polosa { display:flex; height:40px; border-radius:10px; overflow:hidden; margin:10px 0; }
+  .polosa div { flex:1; }
+</style>
+</head>
+<body>
+<main id="m"></main>
+<script>
+const $m = document.getElementById("m");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+// Каждый шрифт — отдельной ссылкой: если у шрифта нет нужной толщины, Google отвергает весь запрос. Не вышло — грузим без толщин.
+const fontLink = list => { const seen = new Set(); list.forEach(([f, w]) => { const k = f + w; if (seen.has(k)) return; seen.add(k);
+  const l = document.createElement("link"); l.rel = "stylesheet";
+  l.href = "https://fonts.googleapis.com/css2?family=" + encodeURIComponent(f) + ":wght@" + w + "&display=swap";
+  l.onerror = () => { l.onerror = null; l.href = "https://fonts.googleapis.com/css2?family=" + encodeURIComponent(f) + "&display=swap"; };
+  document.head.appendChild(l); }); };
+const shrifty = b => [[b.shrifty.zagolovok, b.shrifty.zagolovok_ves || 800], [b.shrifty.tekst, "400;700"]];
+const hex = (b, n) => (b.cveta[n] || b.cveta[0]).hex;
+const lum = h => { h = h.replace("#",""); if (h.length === 3) h = [...h].map(c => c + c).join(""); const f = c => (c /= 255) <= .03928 ? c / 12.92 : ((c + .055) / 1.055) ** 2.4; return .2126 * f(parseInt(h.slice(0,2),16)) + .7152 * f(parseInt(h.slice(2,4),16)) + .0722 * f(parseInt(h.slice(4,6),16)); };
+const na = h => (1.05 / (lum(h) + .05)) >= 3 ? "#fff" : "#111";  // белые буквы, если читаются, иначе тёмные
+const vars = b => `--fon:${hex(b,0)};--tekst:${hex(b,1)};--akcent:${hex(b,2)};--akcent2:${hex(b,3)};--na1:${na(hex(b,2))};--na2:${na(hex(b,3))};--zag:'${b.shrifty.zagolovok}';--osn:'${b.shrifty.tekst}';--zves:${b.shrifty.zagolovok_ves||800}`;
+const vydelit = (t) => { const w = esc(t).split(" "); const i = w.reduce((a, x, k) => x.length > w[a].length ? k : a, 0); w[i] = "<i>" + w[i] + "</i>"; return w.join(" "); };
+const oblozhka = (b, o) => `<div class="obl ${o.foto ? "" : "bezfoto"}" style="${o.foto ? `background-image:url('${esc(o.foto)}')` : ""}"><span class="nik">${esc(b.nik)}</span><b>${vydelit(o.zagolovok)}</b></div>`;
+
+function variant(b, n) {
+  return `<section class="variant" style="${vars(b)}">
+    <div class="vr"><div class="nomer">${n}</div><div><b>${esc(b.nazvanie || "")}</b> <span class="muted">${esc(b.shrifty.zagolovok)} + ${esc(b.shrifty.tekst)}</span></div></div>
+    <div class="polosa">${b.cveta.map(c => `<div style="background:${c.hex}" title="${esc(c.imya)} ${c.hex}"></div>`).join("")}</div>
+    <div class="vr">${oblozhka(b, b.oblozhki[0])}
+      <div class="karta" style="background:var(--fon);color:var(--tekst)"><div class="obr">${esc(b.primer_ky)}</div><p>${esc(b.primer_ru)}</p>
+      <p class="muted">${esc(b.nastroenie || "")}</p></div></div></section>`;
+}
+
+function brendbuk(b) {
+  return `<div class="br" style="${vars(b)}">
+  <section class="shapka"><div class="muted">${esc(b.nik)}</div><h1>${esc(b.imya.split(" ")[0])} <span>${esc(b.imya.split(" ").slice(1).join(" "))}</span></h1>
+    <p>${esc(b.nisha)}</p><p class="muted">Язык: ${esc(b.yazyk)}</p></section>
+  <h2>Цвета</h2><div class="setka">${b.cveta.map(c => `<div class="cvet"><div style="background:${c.hex}"></div><p><b>${esc(c.imya)}</b> ${c.hex}<br><span class="muted">${esc(c.gde)}</span></p></div>`).join("")}</div>
+  <h2>Шрифты</h2><div class="karta"><div class="muted">Заголовок — ${esc(b.shrifty.zagolovok)}</div><div class="obr">${esc(b.primer_ky)}</div>
+    <div class="obr" style="font-size:22px">ҢӨҮ ңөү · ӘҒҚҰҺІ әғқұһі</div><p class="muted">Текст — ${esc(b.shrifty.tekst)}</p><p>${esc(b.primer_ru)}. ${esc(b.primer_ky)}.</p></div>
+  <h2>Обложки</h2><div class="oblozhki">${b.oblozhki.map(o => oblozhka(b, o)).join("")}</div>
+  <h2>Субтитры</h2><div class="sub"><span>Бул окуяны <mark>эч ким</mark> айтпайт</span></div><p class="muted">${esc(b.subtitry)}</p>
+  <h2>Голос</h2><div class="karta"><p><b>${b.golos.slova.map(esc).join(" · ")}</b></p><p>Так говорю: ${esc(b.golos.tak)}</p><p class="muted">Так не говорю: ${esc(b.golos.ne_tak)}</p></div>
+  <h2>Да и нет</h2><div class="dn"><div class="karta"><b>Да</b><ul>${b.da.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>
+    <div class="karta"><b>Нет</b><ul>${b.net.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div></div>
+  <h2>Монтаж</h2><div class="karta">${esc(b.montazh)}</div>
+  <h2>Референсы</h2><div class="karta"><ul>${b.referensy.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div></div>`;
+}
+
+if (VARIANTY.length) {
+  fontLink(VARIANTY.flatMap(shrifty));
+  document.title = "Брендбук: варианты";
+  $m.innerHTML = `<h1 style="font-family:system-ui">Выбери вариант</h1><p>Напиши Claude номер или что взять из разных: «цвета из 2, шрифт из 1».</p>` + VARIANTY.map((v, i) => variant(v, i + 1)).join("");
+} else {
+  fontLink(shrifty(BREND));
+  document.title = "Брендбук " + BREND.imya;
+  $m.innerHTML = brendbuk(BREND);
+}
+</script>
+</body>
+</html>

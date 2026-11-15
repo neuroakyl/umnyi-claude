@@ -1,3 +1,6 @@
 __pycache__/
 .DS_Store
 .githooks/stop-words.local
+.env
+.env.*
+*.env
