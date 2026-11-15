@@ -188,7 +188,7 @@ def klyuchi():
     if not env.exists():
         bad("нет файла ключей ~/.claude/.env", "запустить install.py")
         return
-    imena = [m.group(1) for m in re.finditer(r"^\s*([A-Z][A-Z0-9_]*)\s*=\s*\S", env.read_text(encoding="utf-8", errors="ignore"), re.M)]
+    imena = [m.group(1) for m in re.finditer(r"^[ \t]*([A-Z][A-Z0-9_]*)[ \t]*=[ \t]*\S", env.read_text(encoding="utf-8", errors="ignore"), re.M)]
     imena = [i for i in imena if i != "UMNYI_BEZ_OBNOVLENIY"]
     ok(f"файл ключей на месте, заполнено: {', '.join(imena) if imena else 'пока ни одного (вставим по ходу курса)'}")
 

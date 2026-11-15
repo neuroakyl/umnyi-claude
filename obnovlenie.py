@@ -53,7 +53,7 @@ def vyklyucheno():
         tekst = (CLAUDE / ".env").read_text(encoding="utf-8", errors="ignore")
     except Exception:
         return False
-    return re.search(r"^\s*UMNYI_BEZ_OBNOVLENIY\s*=\s*1\s*$", tekst, re.M) is not None
+    return re.search(r"^[ \t]*UMNYI_BEZ_OBNOVLENIY[ \t]*=[ \t]*1[ \t]*$", tekst, re.M) is not None
 
 
 def versiya():
