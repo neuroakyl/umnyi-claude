@@ -1,0 +1,19 @@
+# Ключи — никогда в Git
+.env
+*.env
+.env.*
+# Тяжёлое и временное
+node_modules/
+.venv/
+__pycache__/
+*.mp4
+*.mov
+*.wav
+*.m4a
+*.zip
+out/
+# Системное
+.DS_Store
+Thumbs.db
+desktop.ini
+.claude/settings.local.json

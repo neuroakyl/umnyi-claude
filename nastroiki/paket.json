@@ -1,0 +1,56 @@
+{
+  "_kak": "Что пакет вливает в ~/.claude/settings.json. Списки дополняются, чужие строки не трогаются. {HOME} и {PROJECTS} подставляет install.py.",
+  "permissions": {
+    "defaultMode": "auto",
+    "allow": [
+      "WebSearch",
+      "WebFetch",
+      "Skill(proverka)",
+      "Skill(obnovit)",
+      "Skill(peredacha)",
+      "Skill(novyi-proekt)",
+      "Bash(git status*)",
+      "Bash(git log*)",
+      "Bash(git diff*)"
+    ],
+    "deny": [
+      "Read(~/.claude/.env)",
+      "Read(**/.env)",
+      "Bash(sudo *)",
+      "Bash(rm -rf ~*)",
+      "Bash(rm -rf /*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)"
+    ],
+    "additionalDirectories": ["{PROJECTS}", "{HOME}/.claude", "{HOME}/Downloads"]
+  },
+  "autoMode": {
+    "environment": [
+      "$defaults",
+      "Organization: личная работа одного человека, ученика курса по контенту на нейросетях. Primary use: контент для соцсетей (сценарии, монтаж видео, генерация картинок, видео и озвучки через API, выкладка), лендинги, таблицы и автоматизация личных дел. Это не разработка ПО для компании.",
+      "Host containment: обычный личный ноутбук или ПК (Windows или Mac) с открытым интернетом.",
+      "Key internal services: API сервисов, на которые человек сам подписан и чьи ключи лежат в ~/.claude/.env: api.heygen.com, api.kie.ai, api.elevenlabs.io, api.apify.com, api.buffer.com, generativelanguage.googleapis.com, api.telegram.org (его собственный бот). Отправить этим сервисам его сценарии, аудио, фото и видео для генерации и выкладки — штатная работа, не утечка.",
+      "Source control: github.com — аккаунт человека (его приватные репозитории, бэкап папки Projects) и публичные репозитории пакета «Умный Claude» и контент-завода (только скачивание и обновление).",
+      "Sensitive data locations & audiences: ~/.claude/.env — ключи API: никогда не выводить, не копировать в другие файлы и не отправлять никуда, кроме API того сервиса, чей это ключ. ~/Projects/мозг/ — личные данные человека: наружу только в составе его собственного контента."
+    ]
+  },
+  "env": {
+    "PYTHONUTF8": "1",
+    "PYTHONIOENCODING": "utf-8"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|clear",
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "bash",
+            "command": "sh \"$HOME/.claude/umnyi/bin/py\" \"$HOME/.claude/umnyi/obnovlenie.py\"",
+            "timeout": 40
+          }
+        ]
+      }
+    ]
+  }
+}

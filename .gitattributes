@@ -1,0 +1,4 @@
+# Windows: Git по умолчанию меняет концы строк на CRLF, и скрипты ломаются. Здесь всегда LF.
+* text=auto eol=lf
+*.png binary
+*.jpg binary

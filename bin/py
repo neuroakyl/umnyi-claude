@@ -1,0 +1,11 @@
+#!/bin/sh
+# Находит рабочий Python 3.8+ на Mac и на Windows (Git Bash) и запускает им скрипт пакета.
+# Заглушки Microsoft Store (python3 без установки) отсеиваются проверкой запуска.
+for c in python3 py python; do
+  command -v "$c" >/dev/null 2>&1 || continue
+  if "$c" -c "import sys; sys.exit(0 if sys.version_info >= (3, 8) else 1)" >/dev/null 2>&1; then
+    exec "$c" -I -X utf8 "$@"
+  fi
+done
+echo "Умный Claude: не нашёл Python 3.8+. Скажи Claude: «установи Python» (Windows: winget install -e --id Python.Python.3.12 --scope user)." >&2
+exit 0
