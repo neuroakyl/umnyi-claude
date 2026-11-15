@@ -65,7 +65,7 @@ def sistema():
 def paket():
     if not (ROOT / ".git").exists():
         bad("пакет поставлен не из Git — не будет обновляться", "переустановить: git clone <ссылка пакета> ~/.claude/umnyi")
-    if ROOT != (CLAUDE / "umnyi").resolve():
+    if os.path.normcase(str(ROOT)) != os.path.normcase(str((CLAUDE / "umnyi").resolve())):
         bad(f"пакет лежит не там ({ROOT})", "перенести в ~/.claude/umnyi и запустить install.py ещё раз")
     try:
         s = json.loads((CLAUDE / "umnyi-sostoyanie.json").read_text(encoding="utf-8"))

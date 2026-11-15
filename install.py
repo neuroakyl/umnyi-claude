@@ -14,6 +14,7 @@
   настройки -> ~/.claude/settings.json           (пакетные строки дописываются, чужие не трогаются, копия до правки)
 """
 import json
+import os
 import shutil
 import sys
 import time
@@ -225,7 +226,7 @@ def main():
     if sys.version_info < (3, 8):
         print("✗ нужен Python 3.8 или новее")
         return 1
-    if ROOT != (CLAUDE / "umnyi").resolve():
+    if os.path.normcase(str(ROOT)) != os.path.normcase(str((CLAUDE / "umnyi").resolve())):
         say("!", f"пакет лежит в {ROOT}, а должен в ~/.claude/umnyi — автообновление и навыки ищут его там")
     CLAUDE.mkdir(parents=True, exist_ok=True)
     proekty = proekty_path()
