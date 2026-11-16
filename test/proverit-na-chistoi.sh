@@ -57,25 +57,25 @@ echo "моё правило" >> "$HOME/.claude/rules/moi-pravila.md"
 echo "- Имя: Тест" >> "$HOME/.claude/CLAUDE.md"
 echo "моя заметка" > "$HOME/Projects/мозг/кто-я.md"
 W="$BAZA/a/work"; git clone -q "$R" "$W"
-echo "1.0.1" > "$W/VERSIYA"
+STARAYA=$(cat "$W/VERSIYA"); echo "9.9.9" > "$W/VERSIYA"  # не зависит от текущей версии пакета
 printf '# Новое правило\nМетка теста: НОВОЕ-ПРАВИЛО\n' > "$W/rules/umnyi-9-test.md"
 git -C "$W" rm -q -r skills/peredacha
 python3 - "$W/ЧТО-НОВОГО.md" <<'EOF'
 import sys; p=sys.argv[1]; t=open(p,encoding='utf-8').read()
-t=t.replace("## 1.0.0", "## 1.0.1 — тест\n- Тестовое правило.\n\n## 1.0.0",1); open(p,'w',encoding='utf-8').write(t)
+i=t.index("\n## ")+1; t=t[:i]+"## 9.9.9 — тест\n- Тестовое правило.\n\n"+t[i:]; open(p,'w',encoding='utf-8').write(t)
 EOF
-(cd "$W" && $GIT add -A && $GIT commit -qm "1.0.1" && git push -q origin main)
+(cd "$W" && $GIT add -A && $GIT commit -qm "9.9.9" && git push -q origin main)
 echo '{}' | py "$HOME/.claude/umnyi/obnovlenie.py" > "$BAZA/a/hook1.txt"
 [ ! -s "$BAZA/a/hook1.txt" ] && pass "хук молчит, если проверял меньше 6 часов назад" || nope "хук не держит паузу"
 python3 -c "import json,sys;p=sys.argv[1];s=json.load(open(p));s['posl_proverka']=0;json.dump(s,open(p,'w'))" "$HOME/.claude/umnyi-sostoyanie.json"
 echo '{}' | py "$HOME/.claude/umnyi/obnovlenie.py" > "$BAZA/a/hook2.txt"
-python3 -c "import json,sys;d=json.load(open(sys.argv[1]));c=d['hookSpecificOutput']['additionalContext'];assert '1.0.0 → 1.0.1' in c and 'Тестовое правило' in c" "$BAZA/a/hook2.txt" \
+python3 -c "import json,sys;d=json.load(open(sys.argv[1]));c=d['hookSpecificOutput']['additionalContext'];assert sys.argv[2]+' → 9.9.9' in c and 'Тестовое правило' in c" "$BAZA/a/hook2.txt" "$STARAYA" \
   && pass "хук обновил и передал Claude «что нового»" || { nope "автообновление"; cat "$BAZA/a/hook2.txt"; }
 [ -f "$HOME/.claude/rules/umnyi-9-test.md" ] && pass "новое правило пришло" || nope "новое правило не пришло"
 [ ! -e "$HOME/.claude/skills/peredacha" ] && pass "убранный из пакета навык убран и у ученика" || nope "старый навык остался"
 grep -q "моё правило" "$HOME/.claude/rules/moi-pravila.md" && grep -q "Имя: Тест" "$HOME/.claude/CLAUDE.md" \
   && grep -q "моя заметка" "$HOME/Projects/мозг/кто-я.md" && pass "свои правила, паспорт и мозг после обновления целы" || nope "личное пострадало"
-py "$HOME/.claude/umnyi/proverka.py" > "$BAZA/a/p2.txt" && grep -q "1.0.1" "$BAZA/a/p2.txt" && pass "проверка после обновления: ВСЁ РАБОТАЕТ" \
+py "$HOME/.claude/umnyi/proverka.py" > "$BAZA/a/p2.txt" && grep -q "9.9.9" "$BAZA/a/p2.txt" && pass "проверка после обновления: ВСЁ РАБОТАЕТ" \
   || { nope "проверка после обновления"; cat "$BAZA/a/p2.txt"; }
 
 # 5. Без сети: хук молчит и быстро выходит

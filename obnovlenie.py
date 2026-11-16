@@ -7,6 +7,7 @@
   --proverka  только сказать, есть ли обновление, ничего не менять (proverka.py)
 Выключить: строка UMNYI_BEZ_OBNOVLENIY=1 в ~/.claude/.env.
 Личные файлы человека не трогает: в папке пакета только код пакета, всё личное лежит в других местах.
+Заодно обновляет навыки завода, монтажа и парсера (~/.claude/skills/…, git pull --ff-only): их данные лежат в Projects, не в навыке.
 """
 import json
 import os
@@ -21,6 +22,8 @@ CLAUDE = Path.home() / ".claude"
 SOST = CLAUDE / "umnyi-sostoyanie.json"
 RAZ_V = 6 * 3600
 SETEVOI_TAIMAUT = 20
+NAVYKI = ("zavod", "montazh", "instagram-parser")  # ставятся заводом из GitHub; без этого правки до ученика не доходят
+SKAZANO = []
 
 seichas = "--seichas" in sys.argv
 tolko_proverka = "--proverka" in sys.argv
@@ -81,10 +84,31 @@ def chto_novogo(staraya):
 def skazat(tekst):
     """Хук: передать Claude. Иначе: напечатать человеку."""
     if hook:
-        print(json.dumps({"hookSpecificOutput": {"hookEventName": "SessionStart", "additionalContext": tekst}},
-                         ensure_ascii=False))
+        SKAZANO.append(tekst)  # хук печатает один JSON в конце: два подряд Claude Code не разберёт
     else:
         print(tekst)
+
+
+def obnovit_navyki():
+    """git pull --ff-only для навыков из NAVYKI. Возвращает обновлённые. Ошибка одного навыка не мешает остальным."""
+    est = []
+    env = dict(os.environ, GIT_TERMINAL_PROMPT="0", LC_ALL="C")
+    for imya in NAVYKI:
+        d = CLAUDE / "skills" / imya
+        if not (d / ".git").exists():
+            continue
+        try:
+            g = lambda *a: subprocess.run(["git", "-C", str(d)] + list(a), capture_output=True, text=True,
+                                          encoding="utf-8", errors="replace", timeout=SETEVOI_TAIMAUT, env=env)
+            do = g("rev-parse", "HEAD").stdout.strip()
+            r = g("pull", "--ff-only", "--quiet")
+            if r.returncode == 0 and g("rev-parse", "HEAD").stdout.strip() != do:
+                est.append(imya)
+            elif r.returncode != 0 and not hook:
+                print(f"! {imya}: не обновился ({(r.stderr or '').strip()[:150]})")
+        except Exception:
+            continue
+    return est
 
 
 def main():
@@ -117,6 +141,11 @@ def main():
         return 0
     s["posl_proverka"] = int(time.time())
     sost_write(s)
+    if not tolko_proverka:
+        navyki = obnovit_navyki()
+        if navyki:
+            skazat("Обновились навыки: " + ", ".join(navyki) + ". Новые правила и настройки работают со следующего чата; "
+                   "человеку — одной строкой, только если он сейчас делает ролик.")
 
     _, moya, _ = git("rev-parse", "HEAD")
     kod, ego, _ = git("rev-parse", "@{u}")
@@ -151,10 +180,17 @@ def main():
     return 0
 
 
+def vyhod():
+    if hook and SKAZANO:
+        print(json.dumps({"hookSpecificOutput": {"hookEventName": "SessionStart", "additionalContext": "\n\n".join(SKAZANO)}},
+                         ensure_ascii=False))
+
+
 if __name__ == "__main__":
     try:
-        sys.exit(main())
+        main()
     except Exception as e:  # хук никогда не должен ломать открытие чата
         if not hook:
             print(f"✗ обновление: {e}")
-        sys.exit(0)
+    vyhod()
+    sys.exit(0)
